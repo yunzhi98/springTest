@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+     http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+    <!-- 启动触发器的配置开始 -->
+
+    <bean id="exampleBusinessObject" class="com.fell.ssm.quartz.MobileByCreatleJob" />
+    <bean id="jobDetail"
+          class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="exampleBusinessObject" />
+        <property name="targetMethod" value="doIt" />
+        <property name="concurrent" value="false" />
+    </bean>
+    <bean id="simpleTrigger"
+          class="org.springframework.scheduling.quartz.SimpleTriggerFactoryBean">
+        <!-- see the example of method invoking job above -->
+        <property name="jobDetail" ref="jobDetail" />
+        <!-- repeat every 50 seconds
+        <property name="cronExpression" value="0/2 * * * * ?" />-->
+        <property name="repeatInterval" value="1000" />
+    </bean>
+
+    <!-- 总调度用于启动Spring定时器 -->
+    <bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <property name="triggers">
+            <list>
+                <ref bean="simpleTrigger" />
+            </list>
+        </property>
+    </bean>
+
+</beans>
